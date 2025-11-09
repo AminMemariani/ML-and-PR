@@ -81,7 +81,10 @@ def summarize_results(model: LogisticRegression, feature_names: list[str]) -> No
 
     # Coefficients indicate how each feature changes the log-odds of malignancy.
     print("Logistic regression coefficients (log-odds impact):")
-    for name, coef in zip(feature_names, model.coef_[0], strict=True):
+    coefficients = model.coef_[0]
+    if len(feature_names) != len(coefficients):
+        raise ValueError("Feature names and coefficient array length mismatch.")
+    for name, coef in zip(feature_names, coefficients):
         print(f"  {name:>15}: {coef:>6.3f}")
 
 

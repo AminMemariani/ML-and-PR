@@ -43,7 +43,12 @@ def load_data(seed: int = 0) -> pd.DataFrame:
     return df
 
 
-def build_pipeline(n_estimators: int = 300, max_depth: int | None = None) -> GridSearchCV:
+def build_pipeline(
+    n_estimators: int = 300,
+    max_depth: int | None = None,
+    param_grid: dict[str, list] | None = None,
+    cv: int = 3,
+) -> GridSearchCV:
     """Create preprocessing + random forest pipeline wrapped in grid search."""
 
     # Separate numeric and categorical features to apply appropriate preprocessing in a ColumnTransformer.
@@ -70,16 +75,16 @@ def build_pipeline(n_estimators: int = 300, max_depth: int | None = None) -> Gri
     pipeline = Pipeline(steps=[("preprocess", preprocessor), ("model", model)])
 
     # Hyperparameters to tune: tree depth and minimum samples needed to split a node.
-    param_grid = {
+    search_space = param_grid or {
         "model__max_depth": [None, 8, 12],
         "model__min_samples_split": [2, 8, 16],
     }
 
     grid = GridSearchCV(
         pipeline,
-        param_grid=param_grid,
+        param_grid=search_space,
         scoring="roc_auc",
-        cv=3,
+        cv=cv,
         n_jobs=-1,
     )
 

@@ -51,7 +51,9 @@ def describe_model(model: LinearRegression, feature_names: list[str]) -> None:
 
     # Zip together feature names with their corresponding coefficients so the
     # impact of each feature (slope) becomes easy to interpret.
-    coef_by_feature = dict(zip(feature_names, model.coef_, strict=True))
+    if len(feature_names) != len(model.coef_):
+        raise ValueError("Feature names and coefficients length mismatch.")
+    coef_by_feature = dict(zip(feature_names, model.coef_))
     intercept = model.intercept_
 
     # The intercept is the baseline prediction when all features are zero.

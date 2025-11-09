@@ -57,7 +57,8 @@ def learning_curve_example(X: np.ndarray, y: np.ndarray) -> None:
     )
 
     print("Learning curve (train sizes vs. mean test score):")
-    for size, score in zip(train_sizes, test_scores.mean(axis=1), strict=True):
+    mean_scores = test_scores.mean(axis=1)
+    for size, score in zip(train_sizes, mean_scores):
         # `size` returns actual sample counts because we specified absolute sizes.
         print(f"  {int(size)} samples -> score {score:.3f}")
 
@@ -78,7 +79,7 @@ def holdout_evaluation_example(X: np.ndarray, y: np.ndarray) -> None:
     model.fit(X_train, y_train)
 
     predictions = model.predict(X_test)
-    rmse = mean_squared_error(y_test, predictions, squared=False)
+    rmse = mean_squared_error(y_test, predictions) ** 0.5
     print("Hold-out RMSE:", f"{rmse:.3f}")
 
 
